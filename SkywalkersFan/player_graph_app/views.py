@@ -1,6 +1,7 @@
 from http.client import HTTPResponse
 import sqlite3 as sql
 import pandas as pd
+import platform
 from django.shortcuts import render
 from django.http import HttpResponse
 
@@ -14,12 +15,22 @@ from math import pi
 from matplotlib.path import Path
 from matplotlib.spines import Spine
 from matplotlib.transforms import Affine2D
+from matplotlib import font_manager, rc
 
 # 한글 폰트 사용을 위해서 세팅
-from matplotlib import font_manager, rc
-font_path = "C:/Windows/Fonts/NGULIM.TTF"
-font = font_manager.FontProperties(fname=font_path).get_name()
-rc('font', family=font)
+# from matplotlib import font_manager, rc
+# font_path = "C:/Windows/Fonts/NGULIM.TTF"
+# font = font_manager.FontProperties(fname=font_path).get_name()
+# rc('font', family=font)
+
+if platform.system()=='Darwin':
+    rc('font',family='AppleGothic')
+elif platform.system()=='Windows':
+    path='C:/Windows/Fonts/malgun.ttf'
+    font_name=font_manager.FontProperties(fname=path).get_name()
+    rc('font',family=font_name)
+else:
+    print('Unknown system...')
 
 # Create your views here.
 def player(request) :
@@ -34,9 +45,6 @@ def dbtodf(table_name):
     result=pd.DataFrame.from_records(data=query.fetchall(),columns=cols)
     con.close()
     return result
-
-
-
 
 # 그래프 그리는 함수들 만들기
 
